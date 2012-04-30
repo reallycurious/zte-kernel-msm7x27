@@ -183,6 +183,7 @@ obj-$(CONFIG_MACH_MOONCAKE) += board-zte-mooncake-keypad.o board-zte-mooncake.o
 obj-$(CONFIG_MACH_V9) += board-zte-v9-keypad.o board-zte-v9.o
 obj-$(CONFIG_MACH_AMIGO) += board-zte-amigo-keypad.o board-zte-amigo.o
 obj-$(CONFIG_MACH_SMOOTH) += board-zte-smooth-keypad.o board-zte-smooth.o
+obj-$(CONFIG_MACH_JOE) += board-zte-joe-keypad.o board-zte-joe.o
 obj-$(CONFIG_MACH_JOECDMA) += board-zte-joecdma-keypad.o board-zte-joecdma.o
 obj-$(CONFIG_MACH_R750) += board-zte-r750.o board-zte-r750-keypad.o
 obj-$(CONFIG_MACH_SKATE) += board-zte-skate-keypad.o board-zte-skate.o
