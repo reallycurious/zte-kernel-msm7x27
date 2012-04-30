@@ -70,6 +70,7 @@
 #include <linux/i2c.h>
 #include <linux/uaccess.h>
 #include <linux/miscdevice.h>
+#include <linux/slab.h>
 #include <media/msm_camera.h>
 #include <mach/gpio.h>
 #include "mt9p111.h"
