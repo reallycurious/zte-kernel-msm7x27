@@ -1184,26 +1184,38 @@ static struct platform_device msm_bcmsleep_device = {
 };
 //compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207 end
 
+#ifdef CONFIG_SENSOR_LIS302DL
 static struct lis302dl_platform_data gsensor = {
 	.gpio_intr1 =  84,
 	.gpio_intr2 =  85,
 	.scale      =  2 ,
 	.int_active_low = 1,
 };
+#endif
 
 static struct i2c_board_info i2c_devices[] = {
 #ifdef CONFIG_MSENSORS_FROM_AUXI2C_TO_I2C   
+#ifdef CONFIG_SENSORS_AK8973
 	{
 		I2C_BOARD_INFO("akm8973", 0x1c),
 	},
 #endif
+#endif //CONFIG_MSENSORS_FROM_AUXI2C_TO_I2C   
 #ifdef CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C  
+#ifdef CONFIG_SENSOR_LIS302DL
 	{
 		.type = "lis302dl",
 		.addr = 0x1d,
 		.platform_data = &gsensor,
 	},
 #endif
+#ifdef CONFIG_SENSOR_ACCELERATOR
+	{
+		.type = "accelerator", 
+		.addr = 0x1d,
+	},
+#endif
+#endif //CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C
 #ifdef CONFIG_MT9D112
 	{
 		I2C_BOARD_INFO("mt9d112", 0x78 >> 1),
@@ -2989,10 +3001,10 @@ static struct i2c_board_info aux_i2c_devices[] = {
 	{
 		I2C_BOARD_INFO("si4708", 0x10),
 	},
-//	{
-//		.type         = "isl29026",
-//		.addr         = 0x45,
-//	},
+	{
+		.type         = "isl29026",
+		.addr         = 0x45,
+	},
 //	{
 //		.type         = "ona3301",
 //		.addr         = 0x37,
@@ -3006,21 +3018,33 @@ static struct i2c_board_info aux_i2c_devices[] = {
 
 static struct i2c_board_info aux2_i2c_devices[] = {
 #ifndef CONFIG_MSENSORS_FROM_AUXI2C_TO_I2C
+#ifdef CONFIG_SENSORS_AK8973
 	{
 		I2C_BOARD_INFO("akm8973", 0x1c),
 	},
 #endif
+#endif //CONFIG_MSENSORS_FROM_AUXI2C_TO_I2C
 #ifndef CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C
+#ifdef CONFIG_SENSOR_LIS302DL
 	{
 		.type = "lis302dl",
 		.addr = 0x1d,
 		.platform_data = &gsensor,
 	},
 #endif
+#ifdef CONFIG_SENSOR_ACCELERATOR
+	{
+		.type = "accelerator", 
+		.addr = 0x1d,
+	},
+#endif
+#endif //CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C
+#ifdef CONFIG_SENSORS_TSL2771	
 	{
 		.type         = "taos",
 		.addr         = 0x39,
 	},
+#endif	
 };
 
 
