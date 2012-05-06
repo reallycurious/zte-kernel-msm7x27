@@ -1939,7 +1939,7 @@ static int msmsdcc_remove(struct platform_device *pdev)
 }
 
 #ifdef CONFIG_PM
-#if defined(CONFIG_BCM_WIFI)
+#if defined(CONFIG_BCM_WIFI) || defined(CONFIG_ATH_WIFI)
 struct msmsdcc_host *wlan_host;
 void plat_disable_wlan_slot(void)
 {
