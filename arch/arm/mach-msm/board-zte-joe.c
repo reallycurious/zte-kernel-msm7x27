@@ -1376,8 +1376,8 @@ static struct i2c_board_info i2c_devices[] = {
 #endif
 #endif
 //ZTE_TSSC_WLY_002,2010-05-10
-#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI
-{
+	#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI
+	{
 		.type         = "synaptics-rmi-ts",
 		/*.flags        = ,*/
 		.addr         = 0x22,
@@ -1627,279 +1627,10 @@ static void config_camera_off_gpios(void)
  */
 #define MSM_CAMERA_POWER_BACKEND_DVDD_VAL       (1800)
 #define MSM_CAMERA_POWER_BACKEND_AVDD_VAL       (2800)
-
-
-//add n880 config judgment ZTE_CAM_WT20110301
-#if defined (CONFIG_CAMERA_N880)
-#define MSM_CAMERA_POWER_BACKEND_IOVDD_VAL      (1800)
-int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
-{
-    struct vreg *vreg_cam_dvdd  = NULL;
-    struct vreg *vreg_cam_avdd  = NULL;
-    struct vreg *vreg_cam_iovdd = NULL;
-    struct vreg *vreg_cam_motor = NULL;
-    int32_t rc_cam_dvdd;
-    int32_t rc_cam_avdd;
-    int32_t rc_cam_iovdd;
-    int32_t rc_cam_motor;
-    CDBG("%s: entry\n", __func__);
-
-    /*
-      * Power-up Sequence according to datasheet of sensor:
-      *
-      * VREG_CAM_DVDD1V8  = VREG_GP2
-      * VREG_CAM_IOVDD2V8 = VREG_MSMP
-      * VREG_CAM_AVDD2V6  = VREG_GP3
-      */
-    vreg_cam_dvdd  =  vreg_get(0, "gp2");
-  	vreg_cam_iovdd =  vreg_get(0, "gp4");
-    vreg_cam_avdd  =  vreg_get(0, "gp3");
-    vreg_cam_motor =  vreg_get(0, "gp6");
-    
-    if ((!vreg_cam_dvdd) || (!vreg_cam_iovdd) || (!vreg_cam_avdd) || (!vreg_cam_motor))
-    {
-        CCRT("%s: vreg_get failed!\n", __func__);
-        return -EIO;
-    }
-    switch (pwr_mode)
-    {
-        case MSM_CAMERA_PWRUP_MODE:
-        {
-            /* DVDD for both 5.0Mp and 3.0Mp camera on board-blade */
-            rc_cam_dvdd = vreg_set_level(vreg_cam_dvdd, MSM_CAMERA_POWER_BACKEND_DVDD_VAL);
-            if (rc_cam_dvdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_dvdd = vreg_enable(vreg_cam_dvdd);
-            if (rc_cam_dvdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(1);
-
-            rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, MSM_CAMERA_POWER_BACKEND_IOVDD_VAL);
-            if (rc_cam_iovdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-            if (rc_cam_iovdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(2);
-
-            /*
-               * AVDD for both 5.0Mp and 3.0Mp camera on board-blade
-               * AVDD and VCM are connected together on board-blade
-               */
-            rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-
-            rc_cam_motor = vreg_set_level(vreg_cam_motor, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor = vreg_enable(vreg_cam_motor);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(500);
-
-            break;
-        }
-        
-        case MSM_CAMERA_STANDBY_MODE:
-        {
-            rc_cam_avdd  = vreg_disable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }
-      
-            rc_cam_motor  = vreg_disable(vreg_cam_motor);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }           
-
-            break;
-        }
-        case MSM_CAMERA_NORMAL_MODE:
-        {
-            /*
-               * AVDD and VCM are connected together on board-blade
-               */
-            rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-            
-            rc_cam_motor = vreg_set_level(vreg_cam_motor, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor = vreg_enable(vreg_cam_motor);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-            
-
-            mdelay(100);
-
-            break;
-        }
-        case MSM_CAMERA_PWRDWN_MODE:
-        {
-            /*
-               * Attention: DVDD, AVDD, or MOTORVDD may be used by other devices
-               */
-            rc_cam_dvdd  = vreg_disable(vreg_cam_dvdd);
-            rc_cam_avdd  = vreg_disable(vreg_cam_avdd);
-            if ((rc_cam_dvdd) || (rc_cam_avdd))
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor  = vreg_disable(vreg_cam_motor);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }      
-            break;
-        }
-        default:
-        {
-            CCRT("%s: parameter not supported!\n", __func__);
-            return -EIO;
-        }
-    }
-
-    return 0;
-}
-#else
-
 #define MSM_CAMERA_POWER_BACKEND_IOVDD_VAL      (2600)
 
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX)
-static int32_t camera_5ca_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg *vreg_cam_avdd, struct vreg *vreg_cam_iovdd)
-{
-    int32_t rc_cam_dvdd, rc_cam_avdd, rc_cam_iovdd;
-
-	/*
-    * modified by ZTE_CAMERA_ZHANGTAO_20110329 for S5K5CAGX-3.0Mp-AF-FPC
-    */
-    rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, 0);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    mdelay(10);
-
-    /* DVDD for both 5.0Mp and 3.0Mp camera on board-blade */
-    rc_cam_dvdd = vreg_set_level(vreg_cam_dvdd, MSM_CAMERA_POWER_BACKEND_DVDD_VAL);
-    if (rc_cam_dvdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_dvdd = vreg_enable(vreg_cam_dvdd);
-    if (rc_cam_dvdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    mdelay(1);
-
-    rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-    if (rc_cam_avdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-    if (rc_cam_avdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, MSM_CAMERA_POWER_BACKEND_IOVDD_VAL);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    return 0;
-}
-#else
 //begin ZTE_CAM_GUOYANLING2011422
-static int32_t blade_camera_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg *vreg_cam_avdd, struct vreg *vreg_cam_iovdd)
+static int32_t joe_camera_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg *vreg_cam_avdd, struct vreg *vreg_cam_iovdd)
 {
     int32_t rc_cam_dvdd, rc_cam_avdd, rc_cam_iovdd;
 
@@ -1958,7 +1689,6 @@ static int32_t blade_camera_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vr
 
     return 0;
 }
-#endif
 
 //end ZTE_CAM_GUOYANLING2011422
 int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
@@ -1993,17 +1723,9 @@ int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
     {
         case MSM_CAMERA_PWRUP_MODE:
         {
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX)
-                ret = camera_5ca_pwrup_sequence(vreg_cam_dvdd, vreg_cam_avdd, vreg_cam_iovdd);
-                if(ret != 0)
-                {
-                  return -EIO;
-                }
-#else
-                ret = blade_camera_pwrup_sequence(vreg_cam_dvdd, vreg_cam_avdd, vreg_cam_iovdd);
+                ret = joe_camera_pwrup_sequence(vreg_cam_dvdd, vreg_cam_avdd, vreg_cam_iovdd);
                 if(ret != 0)
                     return -EIO;
-#endif 
 
 
             break;
@@ -2067,7 +1789,7 @@ int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
 
     return 0;
 }
-#endif
+
 
 /*
  * Commented by zh.shj
@@ -2421,7 +2143,8 @@ static struct platform_device msm_camera_sensor_vb6801 = {
  * merge 5320 for camera flash.
  */ 
 static struct msm_camera_sensor_flash_data flash_mt9p111 = {
-	.flash_type = MSM_CAMERA_FLASH_NONE,
+//	.flash_type = MSM_CAMERA_FLASH_NONE,
+	.flash_type = MSM_CAMERA_FLASH_LED, 
 	.flash_src  = &msm_flash_src
 }; 
 
@@ -2432,7 +2155,8 @@ static struct msm_camera_sensor_info msm_camera_sensor_mt9p111_data = {
 	.vcm_pwd        = 0,
 	.vcm_enable     = 0,
 	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9p111
+	.flash_data     = &flash_mt9p111,
+	.flash_type     = MSM_CAMERA_FLASH_LED
 };
 
 static struct platform_device msm_camera_sensor_mt9p111 = {
@@ -2989,26 +2713,37 @@ static void __init msm_fb_add_devices(void)
 
 
 static struct i2c_board_info aux_i2c_devices[] = {
-#if 0
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI
 	{
-		.type         = "avago_ofn",
-		/*.flags        = ,*/
-		.addr         = 0x33,
-		.platform_data = &avago_ofn,
-		.irq          = MSM_GPIO_TO_INT(35),
+		.type         = "synaptics-rmi-ts",
+		.addr         = 0x22,
+		.irq          = MSM_GPIO_TO_INT(29),
 	},
-#endif
+#endif //CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI=y
+#ifdef CONFIG_TOUCHSCREEN_CYPRESS_I2C_RMI
+	{
+		.type         = "cypress_touch",
+		.addr         = 0x0a,
+		.irq          = MSM_GPIO_TO_INT(29),
+	},
+#endif //CONFIG_TOUCHSCREEN_CYPRESS_I2C_RMI
+#ifdef CONFIG_FM_SI4708
 	{
 		I2C_BOARD_INFO("si4708", 0x10),
 	},
+#endif //CONFIG_FM_SI4708=y
+#ifdef CONFIG_SENSORS_ISL29026
 	{
 		.type         = "isl29026",
 		.addr         = 0x45,
 	},
-//	{
-//		.type         = "ona3301",
-//		.addr         = 0x37,
-//	},
+#endif //CONFIG_SENSORS_ISL29026
+#ifdef CONFIG_SENSORS_ONA3301
+	{
+		.type         = "ona3301",
+		.addr         = 0x37,
+	},
+#endif //CONFIG_SENSORS_ONA3301
 	//ZTE_ALSPRX_001 end
 };
 /*ZTE_AUX_FYA_001,@2010-02-06,END*/
@@ -3022,7 +2757,7 @@ static struct i2c_board_info aux2_i2c_devices[] = {
 	{
 		I2C_BOARD_INFO("akm8973", 0x1c),
 	},
-#endif
+#endif //CONFIG_SENSORS_AK8973
 #endif //CONFIG_MSENSORS_FROM_AUXI2C_TO_I2C
 #ifndef CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C
 #ifdef CONFIG_SENSOR_LIS302DL
@@ -3031,13 +2766,13 @@ static struct i2c_board_info aux2_i2c_devices[] = {
 		.addr = 0x1d,
 		.platform_data = &gsensor,
 	},
-#endif
+#endif //CONFIG_SENSOR_LIS302DL
 #ifdef CONFIG_SENSOR_ACCELERATOR
 	{
 		.type = "accelerator", 
 		.addr = 0x1d,
 	},
-#endif
+#endif //CONFIG_SENSOR_ACCELERATOR
 #endif //CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C
 #ifdef CONFIG_SENSORS_TSL2771	
 	{
@@ -3951,7 +3686,7 @@ static void __init msm7x2x_map_io(void)
 
 #if 0
 #ifdef CONFIG_CACHE_L2X0
-	if (machine_is_msm7x27_surf() || machine_is_msm7x27_ffa() || machine_is_blade()) {
+	if (machine_is_msm7x27_surf() || machine_is_msm7x27_ffa() || machine_is_joe()) {
 		/* 7x27 has 256KB L2 cache:
 			64Kb/Way and 4-Way Associativity;
 			R/W latency: 3 cycles;
