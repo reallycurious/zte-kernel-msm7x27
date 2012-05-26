@@ -168,8 +168,8 @@ static struct mt9p111_i2c_reg_conf const preview_snapshot_mode_reg_settings_arra
     {0xC8B8, 0x0004, WORD_LEN, 0}, 	// CAM_OUTPUT_0_JPEG_CONTROL
     {0xC8AE, 0x0001, WORD_LEN, 0}, 	// CAM_OUTPUT_0_OUTPUT_FORMAT
     //WT_CAM_20110307 change image_width and image_height of preview for zoom
-    {0xC8AA, 0x0400, WORD_LEN, 0}, 	// CAM_OUTPUT_0_IMAGE_WIDTH
-    {0xC8AC, 0x0300, WORD_LEN, 0}, 	// CAM_OUTPUT_0_IMAGE_HEIGHT
+    {0xC8AA, 0x0288, WORD_LEN, 0}, 	// CAM_OUTPUT_0_IMAGE_WIDTH
+    {0xC8AC, 0x01E6, WORD_LEN, 0}, 	// CAM_OUTPUT_0_IMAGE_HEIGHT
     
     //Timming B for YUV 
     {0xC872, 0x0010, WORD_LEN, 0}, 	// CAM_CORE_B_Y_ADDR_START
