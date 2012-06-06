@@ -81,7 +81,7 @@ static int32_t msm_camera_flash_set_led_gpio(int32_t gpio_val)
 
     return rc;
 }
-#if 0
+//#if 0
 static int config_flash_gpio_table(enum msm_cam_flash_stat stat,
 			struct msm_camera_sensor_strobe_flash_data *sfdata)
 {
@@ -117,7 +117,7 @@ static int config_flash_gpio_table(enum msm_cam_flash_stat stat,
 	}
 	return rc;
 }
-#endif
+//#endif
 
 int msm_camera_flash_current_driver(
 	struct msm_camera_sensor_flash_current_driver *current_driver,
@@ -186,6 +186,7 @@ int msm_camera_flash_current_driver(
 	return rc;
 }
 
+#ifndef CONFIG_LEDS_PMIC8058
 /*
  * Refer to MSM_CAM_IOCTL_FLASH_LED_CFG used by mm-camera in user space
  * flash_led_enable is set in apps's menu item selected by user
@@ -230,6 +231,7 @@ int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdat
 
     return rc;
 }
+#endif //not defined (CONFIG_LEDS_PMIC8058)
 /*
  * External Function
  */
@@ -263,7 +265,8 @@ int32_t msm_camera_flash_led_disable(void)
 
     return rc;
 }
-#else
+//#else /* defined(CONFIG_MSM_CAMERA_FLASH) */
+#if defined CONFIG_LEDS_PMIC8058
 static int msm_camera_flash_pwm(
 	struct msm_camera_sensor_flash_pwm *pwm,
 	unsigned led_state)
@@ -384,6 +387,7 @@ int32_t msm_camera_flash_set_led_state(
 
 	return rc;
 }
+#endif //defined CONFIG_LEDS_PMIC8058
 
 static int msm_strobe_flash_xenon_charge(int32_t flash_charge,
 		int32_t charge_enable, uint32_t flash_recharge_duration)
