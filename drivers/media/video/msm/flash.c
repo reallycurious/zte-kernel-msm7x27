@@ -186,14 +186,13 @@ int msm_camera_flash_current_driver(
 	return rc;
 }
 
-#ifndef CONFIG_LEDS_PMIC8058
 /*
  * Refer to MSM_CAM_IOCTL_FLASH_LED_CFG used by mm-camera in user space
  * flash_led_enable is set in apps's menu item selected by user
  * 0: disable Flash LED
  * 1: enable Flash LED
  */
-int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdata,
+int32_t msm_camera_flash_gpio_driver(struct msm_camera_sensor_flash_data *fdata,
                                                  unsigned led_state)
 {
     int32_t rc = 0;
@@ -209,6 +208,7 @@ int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdat
     {
         case MSM_CAMERA_LED_OFF:
             flash_led_enable = 0;
+	    rc = msm_camera_flash_led_disable();
             break;
 
         case MSM_CAMERA_LED_LOW:
@@ -218,9 +218,11 @@ int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdat
                */
             CDBG("%s: set MSM_CAMERA_LED_LOW/MSM_CAMERA_LED_HIGH\n", __func__);
             flash_led_enable = 1;
+	    rc = msm_camera_flash_led_enable();
             break;
 
         default:
+	    if (flash_led_enable) msm_camera_flash_led_disable();
             flash_led_enable = 0;
             rc = -EFAULT;
             CDBG("%s: rc=%d\n", __func__, rc);
@@ -231,7 +233,7 @@ int32_t msm_camera_flash_set_led_state(struct msm_camera_sensor_flash_data *fdat
 
     return rc;
 }
-#endif //not defined (CONFIG_LEDS_PMIC8058)
+
 /*
  * External Function
  */
@@ -265,7 +267,7 @@ int32_t msm_camera_flash_led_disable(void)
 
     return rc;
 }
-//#else /* defined(CONFIG_MSM_CAMERA_FLASH) */
+
 #if defined CONFIG_LEDS_PMIC8058
 static int msm_camera_flash_pwm(
 	struct msm_camera_sensor_flash_pwm *pwm,
@@ -352,6 +354,91 @@ int msm_camera_flash_pmic(
 	return rc;
 }
 
+#else //defined CONFIG_LEDS_PMIC8058
+static int msm_camera_flash_pwm(
+	struct msm_camera_sensor_flash_pwm *pwm,
+	unsigned led_state)
+{
+	int rc = 0;
+	int PWM_PERIOD = NSEC_PER_SEC / pwm->freq;
+
+	static struct pwm_device *flash_pwm;
+
+	if (!flash_pwm) {
+		flash_pwm = pwm_request(pwm->channel, "camera-flash");
+		if (flash_pwm == NULL || IS_ERR(flash_pwm)) {
+			pr_err("%s: FAIL pwm_request(): flash_pwm=%p\n",
+			       __func__, flash_pwm);
+			flash_pwm = NULL;
+			return -ENXIO;
+		}
+	}
+
+	rc = pwm_set_dtest(flash_pwm, 1);
+	if (rc < 0) {
+		pr_err("%s: FAIL pwm_set_dtest(): rc=%d\n", __func__, rc);
+		return -ENXIO;
+	}
+
+	switch (led_state) {
+	case MSM_CAMERA_LED_LOW:
+		rc = pwm_config(flash_pwm,
+			(PWM_PERIOD/pwm->max_load)*pwm->low_load,
+			PWM_PERIOD);
+		if (rc >= 0)
+			rc = pwm_enable(flash_pwm);
+		break;
+
+	case MSM_CAMERA_LED_HIGH:
+		rc = pwm_config(flash_pwm,
+			(PWM_PERIOD/pwm->max_load)*pwm->high_load,
+			PWM_PERIOD);
+		if (rc >= 0)
+			rc = pwm_enable(flash_pwm);
+		break;
+
+	case MSM_CAMERA_LED_OFF:
+		pwm_disable(flash_pwm);
+		rc = pwm_set_dtest(flash_pwm, 0);
+		break;
+
+	default:
+		rc = -EFAULT;
+		break;
+	}
+
+	return rc;
+}
+
+int msm_camera_flash_pmic(
+	struct msm_camera_sensor_flash_pmic *pmic,
+	unsigned led_state)
+{
+	int rc = 0;
+	switch (led_state) {
+	case MSM_CAMERA_LED_OFF:
+		rc = pmic_flash_led_set_current(0);
+		break;
+
+	case MSM_CAMERA_LED_LOW:
+		rc = pmic_flash_led_set_current(pmic->low_current);
+		break;
+
+	case MSM_CAMERA_LED_HIGH:
+		rc = pmic_flash_led_set_current(pmic->high_current);
+		break;
+
+	default:
+		rc = -EFAULT;
+		break;
+	}
+
+	CDBG("flash_set_led_state: return %d\n", rc);
+
+	return rc;
+}
+#endif //defined CONFIG_LEDS_PMIC8058
+
 int32_t msm_camera_flash_set_led_state(
 	struct msm_camera_sensor_flash_data *fdata, unsigned led_state)
 {
@@ -380,6 +467,11 @@ int32_t msm_camera_flash_set_led_state(
 			led_state);
 		break;
 
+	case MSM_CAMERA_FLASH_SRC_GPIO_DRIVER:
+		rc = msm_camera_flash_gpio_driver(fdata,
+			led_state);
+		break;
+
 	default:
 		rc = -ENODEV;
 		break;
@@ -387,7 +479,6 @@ int32_t msm_camera_flash_set_led_state(
 
 	return rc;
 }
-#endif //defined CONFIG_LEDS_PMIC8058
 
 static int msm_strobe_flash_xenon_charge(int32_t flash_charge,
 		int32_t charge_enable, uint32_t flash_recharge_duration)
