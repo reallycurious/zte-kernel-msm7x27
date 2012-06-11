@@ -188,3 +188,4 @@ obj-$(CONFIG_MACH_R750) += board-zte-r750.o board-zte-r750-keypad.o
 obj-$(CONFIG_MACH_SKATE) += board-zte-skate-keypad.o board-zte-skate.o
 obj-$(CONFIG_MACH_ROAMER) += board-zte-roamer-keypad.o board-zte-roamer.o
 obj-$(CONFIG_MACH_BLUETICK) += board-zte-bluetick-keypad.o board-zte-bluetick.o
+obj-$(CONFIG_MACH_JOE) += board-zte-joe-keypad.o board-zte-joe.o
