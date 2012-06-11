@@ -1141,7 +1141,7 @@ config MSM_CPU_FREQ_OVERCLOCK_800
 
 config MSM_CPU_FREQ_OVERCLOCK_AHB
 	bool "Overclock the AHB-bus with 50% for all frequencies from 400MHz and above."
-	depends on (MACH_BLADE || MACH_V9 || MACH_SKATE)
+	depends on (MACH_BLADE || MACH_BLADE2 || MACH_V9 || MACH_SKATE || MACH_JOE)
 	default n
 	help
 	  Increases the speed of memory read/writes but can cause instability.
