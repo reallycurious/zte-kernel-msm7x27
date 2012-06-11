@@ -79,6 +79,52 @@ static enum msm_camera_type camera_type[MSM_MAX_CAMERA_SENSORS];
  */
 static uint32_t sensor_mount_angle[MSM_MAX_CAMERA_SENSORS];
 
+static const char *vfe_config_cmd[] = {
+	"CMD_GENERAL",  /* 0 */
+	"CMD_AXI_CFG_OUT1",
+	"CMD_AXI_CFG_SNAP_O1_AND_O2",
+	"CMD_AXI_CFG_OUT2",
+	"CMD_PICT_T_AXI_CFG",
+	"CMD_PICT_M_AXI_CFG",  /* 5 */
+	"CMD_RAW_PICT_AXI_CFG",
+	"CMD_FRAME_BUF_RELEASE",
+	"CMD_PREV_BUF_CFG",
+	"CMD_SNAP_BUF_RELEASE",
+	"CMD_SNAP_BUF_CFG",  /* 10 */
+	"CMD_STATS_DISABLE",
+	"CMD_STATS_AEC_AWB_ENABLE",
+	"CMD_STATS_AF_ENABLE",
+	"CMD_STATS_AEC_ENABLE",
+	"CMD_STATS_AWB_ENABLE",  /* 15 */
+	"CMD_STATS_ENABLE",
+	"CMD_STATS_AXI_CFG",
+	"CMD_STATS_AEC_AXI_CFG",
+	"CMD_STATS_AF_AXI_CFG",
+	"CMD_STATS_AWB_AXI_CFG",  /* 20 */
+	"CMD_STATS_RS_AXI_CFG",
+	"CMD_STATS_CS_AXI_CFG",
+	"CMD_STATS_IHIST_AXI_CFG",
+	"CMD_STATS_SKIN_AXI_CFG",
+	"CMD_STATS_BUF_RELEASE",  /* 25 */
+	"CMD_STATS_AEC_BUF_RELEASE",
+	"CMD_STATS_AF_BUF_RELEASE",
+	"CMD_STATS_AWB_BUF_RELEASE",
+	"CMD_STATS_RS_BUF_RELEASE",
+	"CMD_STATS_CS_BUF_RELEASE",  /* 30 */
+	"CMD_STATS_IHIST_BUF_RELEASE",
+	"CMD_STATS_SKIN_BUF_RELEASE",
+	"UPDATE_STATS_INVALID",
+	"CMD_AXI_CFG_SNAP_GEMINI",
+	"CMD_AXI_CFG_SNAP",  /* 35 */
+	"CMD_AXI_CFG_PREVIEW",
+	"CMD_AXI_CFG_VIDEO",
+	"CMD_STATS_IHIST_ENABLE",
+	"CMD_STATS_RS_ENABLE",
+	"CMD_STATS_CS_ENABLE",  /* 40 */
+	"CMD_VPE",
+	"CMD_AXI_CFG_VPE"
+};
+
 #define __CONTAINS(r, v, l, field) ({				\
 	typeof(r) __r = r;					\
 	typeof(v) __v = v;					\
@@ -2365,8 +2411,8 @@ static long msm_ioctl_config(struct file *filep, unsigned int cmd,
 			ERR_COPY_FROM_USER();
 			rc = -EFAULT;
 		}
-//		else
-//			rc = msm_flash_ctrl(pmsm->sync->sdata, &flash_info);
+		else
+			rc = msm_flash_ctrl(pmsm->sync->sdata, &flash_info);
 
 		break;
 	}
