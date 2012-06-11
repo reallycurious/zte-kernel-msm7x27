@@ -1221,36 +1221,6 @@ static struct i2c_board_info i2c_devices[] = {
 	},
 #endif //CONFIG_SENSOR_ACCELERATOR
 #endif //CONFIG_GSENSORS_FROM_AUXI2C_TO_I2C 
-#ifdef CONFIG_MT9D112
-	{
-		I2C_BOARD_INFO("mt9d112", 0x78 >> 1),
-	},
-#endif
-#ifdef CONFIG_S5K3E2FX
-	{
-		I2C_BOARD_INFO("s5k3e2fx", 0x20 >> 1),
-	},
-#endif
-#ifdef CONFIG_MT9P012
-	{
-		I2C_BOARD_INFO("mt9p012", 0x6C >> 1),
-	},
-#endif
-#ifdef CONFIG_MT9P012_KM
-	{
-		I2C_BOARD_INFO("mt9p012_km", 0x6C >> 2),
-	},
-#endif
-#if defined(CONFIG_MT9T013) || defined(CONFIG_SENSORS_MT9T013)
-	{
-		I2C_BOARD_INFO("mt9t013", 0x6C),
-	},
-#endif
-#ifdef CONFIG_VB6801
-	{
-		I2C_BOARD_INFO("vb6801", 0x20),
-	},
-#endif
 
 #ifdef CONFIG_MT9P111
     /*
@@ -1266,10 +1236,10 @@ static struct i2c_board_info i2c_devices[] = {
     {
         I2C_BOARD_INFO("mt9p111", 0x7A >> 1),
     },
-#else
+#else //!defined(CONFIG_SENSOR_ADAPTER)
     //Do nothing
-#endif
-#endif
+#endif //!defined(CONFIG_SENSOR_ADAPTER)
+#endif //CONFIG_MT9P111
 
 #ifdef CONFIG_MT9T11X
     /*
@@ -1286,100 +1256,11 @@ static struct i2c_board_info i2c_devices[] = {
     {
         I2C_BOARD_INFO("mt9t11x", 0x7A >> 1),
     },
-#else
+#else //!defined(CONFIG_SENSOR_ADAPTER)
     //Do nothing
-#endif
-#endif
+#endif //!defined(CONFIG_SENSOR_ADAPTER)
+#endif //CONFIG_MT9T11X
 
-#ifdef CONFIG_MT9D115
-    /*
-     * add by ZTE_CAMERA_LIJING_20100629 for MT9D115-2.0Mp-FF-Socket
-     */
-#if !defined(CONFIG_SENSOR_ADAPTER)
-    {
-        I2C_BOARD_INFO("mt9d115", 0x78 >> 1),
-    },
-#else
-    //Do nothing
-#endif
-#endif
-
-#ifdef CONFIG_MT9V113
-    /*
-     * Commented by zhang.shengjie
-     *
-     * Refer to drivers/media/video/msm/mt9v113.c
-     * For MT9V113: 0.3Mp, 1/11-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     */
-    {
-        I2C_BOARD_INFO("mt9v113", 0x78 >> 1),
-    },
-#endif
-
-#ifdef CONFIG_OV5642
-    /*
-     * Commented by zhang.shengjie
-     *
-     * Refer to drivers/media/video/msm/ov5642.c
-     * For OV5642: 5.0Mp, 1/11-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     *
-     * Attention: I2C device is initialized in sensor's driver if "CONFIG_SENSOR_ADAPTER"
-     *            is defined
-     */
-#if !defined(CONFIG_SENSOR_ADAPTER)
-    {
-        I2C_BOARD_INFO("ov5642", 0x78 >> 1),
-    },
-#else
-    //Do nothing
-#endif
-#endif
-
-
-#ifdef CONFIG_S5K5CAGX
-    /*
-     * add by ZTE_CAMERA_GUOYANLING_20110328 for S5K5CAGX-3.0Mp-AF-FPC
-     */
-#if !defined(CONFIG_SENSOR_ADAPTER)
-    {
-        I2C_BOARD_INFO("s5k5cagx", 0x78 >> 1),
-    },
-#else
-    //Do nothing
-#endif
-#endif
-
-#ifdef CONFIG_S5K5CAGX_MCNEX_QTECH
-    /*
-     * add by ZTE_CAMERA_GUOYANLING_20110511 for S5K5CAGX_MCNEX_QTECH-3.0Mp-AF-FPC
-     */
-#if !defined(CONFIG_SENSOR_ADAPTER)
-    {
-        I2C_BOARD_INFO("s5k5cagx_mcnex_qtech", 0x5A >> 1),
-    },
-#else
-    //Do nothing
-#endif
-#endif
-
-#ifdef CONFIG_OV5640
-    /*
-     * Commented by zhang.shengjie
-     *
-     * Refer to drivers/media/video/msm/ov5640.c
-     * For OV5640: 5.0Mp, 1/11-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     *
-     * Attention: I2C device is initialized in sensor's driver if "CONFIG_SENSOR_ADAPTER"
-     *            is defined
-     */
-#if !defined(CONFIG_SENSOR_ADAPTER)
-    {
-        I2C_BOARD_INFO("ov5640", 0x78 >> 1),
-    },
-#else
-    //Do nothing
-#endif
-#endif
 //ZTE_TSSC_WLY_002,2010-05-10
 #ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI
 {
@@ -1473,7 +1354,7 @@ static uint32_t camera_off_gpio_table[] = {
     GPIO_CFG(13, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* HSYNC_IN */
     GPIO_CFG(14, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA), /* VSYNC_IN */
     GPIO_CFG(15, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA), /* MCLK */
-#else
+#else //0
     GPIO_CFG(4,  0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* CIF_DATA <0> */
     GPIO_CFG(5,  0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* CIF_DATA <1> */
     GPIO_CFG(6,  0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* CIF_DATA <2> */
@@ -1486,7 +1367,7 @@ static uint32_t camera_off_gpio_table[] = {
     GPIO_CFG(13, 0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* CIF_HSYNC */
     GPIO_CFG(14, 0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA), /* CIF_VSYNC */
     GPIO_CFG(15, 0, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),  /* CIF_MCLK */
-#endif
+#endif  //0  
 };
 
 static uint32_t camera_on_gpio_table[] = {
@@ -1632,277 +1513,8 @@ static void config_camera_off_gpios(void)
  */
 #define MSM_CAMERA_POWER_BACKEND_DVDD_VAL       (1800)
 #define MSM_CAMERA_POWER_BACKEND_AVDD_VAL       (2800)
-
-
-//add n880 config judgment ZTE_CAM_WT20110301
-#if defined (CONFIG_CAMERA_N880)
-#define MSM_CAMERA_POWER_BACKEND_IOVDD_VAL      (1800)
-int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
-{
-    struct vreg *vreg_cam_dvdd  = NULL;
-    struct vreg *vreg_cam_avdd  = NULL;
-    struct vreg *vreg_cam_iovdd = NULL;
-    struct vreg *vreg_cam_motor = NULL;
-    int32_t rc_cam_dvdd;
-    int32_t rc_cam_avdd;
-    int32_t rc_cam_iovdd;
-    int32_t rc_cam_motor;
-    CDBG("%s: entry\n", __func__);
-
-    /*
-      * Power-up Sequence according to datasheet of sensor:
-      *
-      * VREG_CAM_DVDD1V8  = VREG_GP2
-      * VREG_CAM_IOVDD2V8 = VREG_MSMP
-      * VREG_CAM_AVDD2V6  = VREG_GP3
-      */
-    vreg_cam_dvdd  =  vreg_get(0, "gp2");
-  	vreg_cam_iovdd =  vreg_get(0, "gp4");
-    vreg_cam_avdd  =  vreg_get(0, "gp3");
-    vreg_cam_motor =  vreg_get(0, "gp6");
-    
-    if ((!vreg_cam_dvdd) || (!vreg_cam_iovdd) || (!vreg_cam_avdd) || (!vreg_cam_motor))
-    {
-        CCRT("%s: vreg_get failed!\n", __func__);
-        return -EIO;
-    }
-    switch (pwr_mode)
-    {
-        case MSM_CAMERA_PWRUP_MODE:
-        {
-            /* DVDD for both 5.0Mp and 3.0Mp camera on board-blade */
-            rc_cam_dvdd = vreg_set_level(vreg_cam_dvdd, MSM_CAMERA_POWER_BACKEND_DVDD_VAL);
-            if (rc_cam_dvdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_dvdd = vreg_enable(vreg_cam_dvdd);
-            if (rc_cam_dvdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(1);
-
-            rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, MSM_CAMERA_POWER_BACKEND_IOVDD_VAL);
-            if (rc_cam_iovdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-            if (rc_cam_iovdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(2);
-
-            /*
-               * AVDD for both 5.0Mp and 3.0Mp camera on board-blade
-               * AVDD and VCM are connected together on board-blade
-               */
-            rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-
-            rc_cam_motor = vreg_set_level(vreg_cam_motor, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor = vreg_enable(vreg_cam_motor);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-
-            mdelay(500);
-
-            break;
-        }
-        
-        case MSM_CAMERA_STANDBY_MODE:
-        {
-            rc_cam_avdd  = vreg_disable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }
-      
-            rc_cam_motor  = vreg_disable(vreg_cam_motor);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }           
-
-            break;
-        }
-        case MSM_CAMERA_NORMAL_MODE:
-        {
-            /*
-               * AVDD and VCM are connected together on board-blade
-               */
-            rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-            
-            rc_cam_motor = vreg_set_level(vreg_cam_motor, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_set_level failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor = vreg_enable(vreg_cam_motor);
-            if (rc_cam_avdd)
-            {
-                CCRT("%s: vreg_enable failed!\n", __func__);
-                return -EIO;
-            }
-            
-
-            mdelay(100);
-
-            break;
-        }
-        case MSM_CAMERA_PWRDWN_MODE:
-        {
-            /*
-               * Attention: DVDD, AVDD, or MOTORVDD may be used by other devices
-               */
-            rc_cam_dvdd  = vreg_disable(vreg_cam_dvdd);
-            rc_cam_avdd  = vreg_disable(vreg_cam_avdd);
-            if ((rc_cam_dvdd) || (rc_cam_avdd))
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }
-
-            rc_cam_motor  = vreg_disable(vreg_cam_motor);
-            if (rc_cam_motor)
-            {
-                CCRT("%s: vreg_disable failed!\n", __func__);
-                return -EIO;
-            }      
-            break;
-        }
-        default:
-        {
-            CCRT("%s: parameter not supported!\n", __func__);
-            return -EIO;
-        }
-    }
-
-    return 0;
-}
-#else
-
 #define MSM_CAMERA_POWER_BACKEND_IOVDD_VAL      (2600)
 
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX)
-static int32_t camera_5ca_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg *vreg_cam_avdd, struct vreg *vreg_cam_iovdd)
-{
-    int32_t rc_cam_dvdd, rc_cam_avdd, rc_cam_iovdd;
-
-	/*
-    * modified by ZTE_CAMERA_ZHANGTAO_20110329 for S5K5CAGX-3.0Mp-AF-FPC
-    */
-    rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, 0);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    mdelay(10);
-
-    /* DVDD for both 5.0Mp and 3.0Mp camera on board-blade */
-    rc_cam_dvdd = vreg_set_level(vreg_cam_dvdd, MSM_CAMERA_POWER_BACKEND_DVDD_VAL);
-    if (rc_cam_dvdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_dvdd = vreg_enable(vreg_cam_dvdd);
-    if (rc_cam_dvdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    mdelay(1);
-
-    rc_cam_avdd = vreg_set_level(vreg_cam_avdd, MSM_CAMERA_POWER_BACKEND_AVDD_VAL);
-    if (rc_cam_avdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_avdd = vreg_enable(vreg_cam_avdd);
-    if (rc_cam_avdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_set_level(vreg_cam_iovdd, MSM_CAMERA_POWER_BACKEND_IOVDD_VAL);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_set_level failed!\n", __func__);
-        return -EIO;
-    }
-
-    rc_cam_iovdd = vreg_enable(vreg_cam_iovdd);
-    if (rc_cam_iovdd)
-    {
-        CCRT("%s: vreg_enable failed!\n", __func__);
-        return -EIO;
-    }
-
-    return 0;
-}
-#else
 //begin ZTE_CAM_GUOYANLING2011422
 static int32_t joe_camera_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg *vreg_cam_avdd, struct vreg *vreg_cam_iovdd)
 {
@@ -1963,7 +1575,6 @@ static int32_t joe_camera_pwrup_sequence(struct vreg *vreg_cam_dvdd, struct vreg
 
     return 0;
 }
-#endif
 
 //end ZTE_CAM_GUOYANLING2011422
 int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
@@ -1998,18 +1609,9 @@ int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
     {
         case MSM_CAMERA_PWRUP_MODE:
         {
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX)
-                ret = camera_5ca_pwrup_sequence(vreg_cam_dvdd, vreg_cam_avdd, vreg_cam_iovdd);
-                if(ret != 0)
-                {
-                  return -EIO;
-                }
-#else
                 ret = joe_camera_pwrup_sequence(vreg_cam_dvdd, vreg_cam_avdd, vreg_cam_iovdd);
                 if(ret != 0)
                     return -EIO;
-#endif 
-
 
             break;
         }
@@ -2072,7 +1674,6 @@ int32_t msm_camera_power_backend(enum msm_camera_pwr_mode_t pwr_mode)
 
     return 0;
 }
-#endif
 
 /*
  * Commented by zh.shj
@@ -2244,173 +1845,6 @@ static struct msm_camera_sensor_flash_src msm_flash_src = {
 	._fsrc.pmic_src.high_current = 100,
 };
 
-#ifdef CONFIG_MT9D112
-static struct msm_camera_sensor_flash_data flash_mt9d112 = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_mt9d112_data = {
-	.sensor_name    = "mt9d112",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 85,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9d112
-};
-
-static struct platform_device msm_camera_sensor_mt9d112 = {
-	.name      = "msm_camera_mt9d112",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_mt9d112_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_S5K3E2FX
-static struct msm_camera_sensor_flash_data flash_s5k3e2fx = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_s5k3e2fx_data = {
-	.sensor_name    = "s5k3e2fx",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 85,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_s5k3e2fx
-};
-
-static struct platform_device msm_camera_sensor_s5k3e2fx = {
-	.name      = "msm_camera_s5k3e2fx",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_s5k3e2fx_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_S5K5CAGX
-static struct msm_camera_sensor_flash_data flash_s5k5cagx = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_s5k5cagx_data = {
-	.sensor_name    = "s5k5cagx",
-	.sensor_reset   = 2,
-	.sensor_pwd     = 1,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_s5k5cagx
-};
-
-static struct platform_device msm_camera_sensor_s5k5cagx = {
-	.name      = "msm_camera_s5k5cagx",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_s5k5cagx_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_MT9P012
-static struct msm_camera_sensor_flash_data flash_mt9p012 = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_mt9p012_data = {
-	.sensor_name    = "mt9p012",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 85,
-	.vcm_pwd        = 88,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9p012
-};
-
-static struct platform_device msm_camera_sensor_mt9p012 = {
-	.name      = "msm_camera_mt9p012",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_mt9p012_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_MT9P012_KM
-static struct msm_camera_sensor_flash_data flash_mt9p012_km = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_mt9p012_km_data = {
-	.sensor_name    = "mt9p012_km",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 85,
-	.vcm_pwd        = 88,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9p012_km
-};
-
-static struct platform_device msm_camera_sensor_mt9p012_km = {
-	.name      = "msm_camera_mt9p012_km",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_mt9p012_km_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_MT9T013
-static struct msm_camera_sensor_flash_data flash_mt9t013 = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_mt9t013_data = {
-	.sensor_name    = "mt9t013",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 85,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9t013
-};
-
-static struct platform_device msm_camera_sensor_mt9t013 = {
-	.name      = "msm_camera_mt9t013",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_mt9t013_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_VB6801
-static struct msm_camera_sensor_flash_data flash_vb6801 = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_vb6801_data = {
-	.sensor_name    = "vb6801",
-	.sensor_reset   = 89,
-	.sensor_pwd     = 88,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_vb6801
-};
-
-static struct platform_device msm_camera_sensor_vb6801 = {
-	.name      = "msm_camera_vb6801",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_vb6801_data,
-	},
-};
-#endif
 #ifdef CONFIG_MT9P111
 /*
  * Commented by zhang.shengjie
@@ -2446,7 +1880,7 @@ static struct platform_device msm_camera_sensor_mt9p111 = {
 		.platform_data = &msm_camera_sensor_mt9p111_data,
 	},
 };
-#endif
+#endif //CONFIG_MT9P111
 
 #ifdef CONFIG_MT9T11X
 /*
@@ -2484,172 +1918,9 @@ static struct platform_device msm_camera_sensor_mt9t11x = {
 		.platform_data = &msm_camera_sensor_mt9t11x_data,
 	},
 };
-#endif
+#endif //CONFIG_MT9T11X
 
-#ifdef CONFIG_MT9D115
-/*
- * add by ZTE_CAMERA_LIJING_20100629 for MT9D115-2.0Mp-FF-Socket
- */
-static struct msm_camera_sensor_flash_data flash_mt9d115 = {
-    .flash_type = MSM_CAMERA_FLASH_NONE,
-    .flash_src  = &msm_flash_src
-};
- 
-static struct msm_camera_sensor_info msm_camera_sensor_mt9d115_data = {
-    .sensor_name    = "mt9d115",
-    .sensor_reset   = 2,
-    .sensor_pwd     = 1,
-    .vcm_pwd        = 0,
-    .vcm_enable     = 0,
-    .pdata          = &msm_camera_device_data,
-    .flash_data     = &flash_mt9d115
-};
-
-static struct platform_device msm_camera_sensor_mt9d115 = {
-    .name      = "msm_camera_mt9d115",
-    .dev       = {
-        .platform_data = &msm_camera_sensor_mt9d115_data,
-    },
-};
-#endif
-
-#ifdef CONFIG_MT9V113
-/*
- * Commented by zhang.shengjie
- *
- * Refer to drivers/media/video/msm/mt9v113.c
- * For MT9V113: 0.3Mp, 1/11-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
- */
- 
-/* CHG_CAM_20100401
- * Commented by chg
- * merge 5320 for camera flash.
- */ 
-static struct msm_camera_sensor_flash_data flash_mt9v113 = {
-	.flash_type = MSM_CAMERA_FLASH_NONE,
-	.flash_src  = &msm_flash_src
-};
- 
-static struct msm_camera_sensor_info msm_camera_sensor_mt9v113_data = {
-	.sensor_name    = "mt9v113",
-	.sensor_reset   = 0,
-	.sensor_pwd     = 0,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_mt9v113
-};
-
-static struct platform_device msm_camera_sensor_mt9v113 = {
-	.name      = "msm_camera_mt9v113",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_mt9v113_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_OV5642
-/*
- * Commented by zhang.shengjie
- *
- * Refer to drivers/media/video/msm/ov5642.c
- * For OV5642: 5.0Mp, 1/4-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
- *
- * ".vcm_pwd" are DISUSED
- */
-
-/* CHG_CAM_20100401
- * Commented by chg
- * merge 5320 for camera flash.
- */ 
-static struct msm_camera_sensor_flash_data flash_ov5642 = {
-	.flash_type = MSM_CAMERA_FLASH_NONE,
-	.flash_src  = &msm_flash_src
-};
- 
-static struct msm_camera_sensor_info msm_camera_sensor_ov5642_data = {
-	.sensor_name    = "ov5642",
-	.sensor_reset   = 2,
-	.sensor_pwd     = 1,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_ov5642
-};
-
-static struct platform_device msm_camera_sensor_ov5642 = {
-	.name      = "msm_camera_ov5642",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_ov5642_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_S5K5CAGX_MCNEX_QTECH
-/*
- * add by ZTE_CAM_GUOYANLING20110511 for S5K5CAGX_MCNEX_QTECH-3.0Mp-AF-FPC
- */ 
-static struct msm_camera_sensor_flash_data flash_s5k5cagx_mcnex_qtech = {
-	.flash_type = MSM_CAMERA_FLASH_NONE,
-	.flash_src  = &msm_flash_src
-};
- 
-static struct msm_camera_sensor_info msm_camera_sensor_s5k5cagx_mcnex_qtech_data = {
-	.sensor_name    = "s5k5cagx_mcnex_qtech",
-	.sensor_reset   = 2,
-	.sensor_pwd     = 1,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_s5k5cagx_mcnex_qtech
-};
-
-static struct platform_device msm_camera_sensor_s5k5cagx_mcnex_qtech = {
-	.name      = "msm_camera_s5k5cagx_mcnex_qtech",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_s5k5cagx_mcnex_qtech_data,
-	},
-};
-#endif
-
-#ifdef CONFIG_OV5640
-/*
- * Commented by zhang.shengjie
- *
- * Refer to drivers/media/video/msm/ov5640.c
- * For OV5640: 5.0Mp, 1/4-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
- *
- * ".vcm_pwd" are DISUSED
- */
-
-/* CHG_CAM_20100401
- * Commented by chg
- * merge 5320 for camera flash.
- */ 
-static struct msm_camera_sensor_flash_data flash_ov5640 = {
-	.flash_type = MSM_CAMERA_FLASH_LED,
-	.flash_src  = &msm_flash_src
-};
- 
-static struct msm_camera_sensor_info msm_camera_sensor_ov5640_data = {
-	.sensor_name    = "ov5640",
-	.sensor_reset   = 2,
-	.sensor_pwd     = 1,
-	.vcm_pwd        = 0,
-	.vcm_enable     = 0,
-	.pdata          = &msm_camera_device_data,
-	.flash_data     = &flash_ov5640
-};
-
-static struct platform_device msm_camera_sensor_ov5640 = {
-	.name      = "msm_camera_ov5640",
-	.dev       = {
-		.platform_data = &msm_camera_sensor_ov5640_data,
-	},
-};
-#endif
-
-#endif
+#endif //CONFIG_MSM_CAMERA
 
 /*ZTE_TSSC_ZT_004,@2010-01-27,BEGIN*/
 /*ZTE_TSSC_WLY_001, @2010-04-13,BEGIN*/
@@ -2875,24 +2146,6 @@ static struct platform_device *devices[] __initdata = {
 	&android_leds, //button-backlight
 	&msm_device_snd,
 	&msm_device_adspdec,
-#ifdef CONFIG_MT9T013
-	&msm_camera_sensor_mt9t013,
-#endif
-#ifdef CONFIG_MT9D112
-	&msm_camera_sensor_mt9d112,
-#endif
-#ifdef CONFIG_S5K3E2FX
-	&msm_camera_sensor_s5k3e2fx,
-#endif
-#ifdef CONFIG_MT9P012
-	&msm_camera_sensor_mt9p012,
-#endif
-#ifdef CONFIG_MT9P012_KM
-	&msm_camera_sensor_mt9p012_km,
-#endif
-#ifdef CONFIG_VB6801
-	&msm_camera_sensor_vb6801,
-#endif
 	&msm_bluesleep_device,
 	&msm_bcmsleep_device,     //compatible of qualcomm and broadcomm bluetooth chip     ZTE_BT_QXX_20101207
 #ifdef CONFIG_ARCH_MSM7X27
@@ -2917,60 +2170,6 @@ static struct platform_device *devices[] __initdata = {
      * For MT9T112: 3.1Mp, 1/4-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
      */
     &msm_camera_sensor_mt9t11x,
-#endif
-
-#ifdef CONFIG_MT9D115
-    /*
-     * add by ZTE_CAMERA_LIJING_20100629 for MT9D115-2.0Mp-FF-Socket
-     */
-    &msm_camera_sensor_mt9d115,
-#endif
-
-#ifdef CONFIG_MT9V113
-    /*
-     * Commented by zh.shj
-     *
-     * Refer to drivers/media/video/msm/mt9v113.c
-     * For MT9V113: 0.3Mp, 1/11-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     */
-    &msm_camera_sensor_mt9v113,
-#endif
-
-#ifdef CONFIG_OV5642
-    /*
-     * Commented by zh.shj
-     *
-     * Refer to drivers/media/video/msm/ov5642.c
-     * For OV5642: 5.0Mp, 1/4-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     */
-    &msm_camera_sensor_ov5642,
-#endif
-
-#ifdef CONFIG_S5K5CAGX
-    /*
-     * Commented by zh.shj
-     *
-     * Refer to drivers/media/video/msm/s5k5cagx.c
-     * For S5K5CAGX: 3.1Mp, 1/5-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     */
-    &msm_camera_sensor_s5k5cagx,
-#endif
-
-#ifdef CONFIG_S5K5CAGX_MCNEX_QTECH
-    /*
-     * add by ZTE_CAM_GUOYANLING20110511 for S5K5CAGX_MCNEX_QTECH-3.0Mp-AF-FPC
-     */
-    &msm_camera_sensor_s5k5cagx_mcnex_qtech,
-#endif
-
-#ifdef CONFIG_OV5640
-    /*
-     * Commented by zh.shj
-     *
-     * Refer to drivers/media/video/msm/ov5640.c
-     * For OV5640: 5.0Mp, 1/4-Inch System-On-A-Chip (SOC) CMOS Digital Image Sensor
-     */
-    &msm_camera_sensor_ov5640,
 #endif
 
 	&hs_device,
@@ -3281,7 +2480,7 @@ static struct mmc_platform_data msm7x2x_sdc1_data = {
 	.msmsdcc_fmax	= 49152000,
 	.nonremovable	= 1,
 };
-#endif
+#endif //CONFIG_MMC_MSM_SDC1_SUPPORT
 
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
 static struct mmc_platform_data msm7x2x_sdc2_data = {
@@ -3292,18 +2491,18 @@ static struct mmc_platform_data msm7x2x_sdc2_data = {
 #ifdef CONFIG_ATH_WIFI
 #ifdef CONFIG_WOW_BY_SDIO_DATA1 
 	.sdiowakeup_irq = MSM_GPIO_TO_INT(66),
-#else
+#else //CONFIG_WOW_BY_SDIO_DATA1 
         .sdiowakeup_irq = MSM_GPIO_TO_INT(19),
-#endif
+#endif //CONFIG_WOW_BY_SDIO_DATA1 
 #endif /*CONFIG_ATH_WIFI*/
-#endif
+#endif //CONFIG_MMC_MSM_SDIO_SUPPORT
 	.msmsdcc_fmin	= 144000,
 	.msmsdcc_fmid	= 24576000,
 	.msmsdcc_fmax	= 49152000,
 	.nonremovable	= 0,
 	.dummy52_required = 1,
 };
-#endif
+#endif //CONFIG_MMC_MSM_SDC2_SUPPORT
 
 #ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
 static struct mmc_platform_data msm7x2x_sdc3_data = {
@@ -3315,7 +2514,7 @@ static struct mmc_platform_data msm7x2x_sdc3_data = {
 	.msmsdcc_fmax	= 49152000,
 	.nonremovable	= 0,
 };
-#endif
+#endif //CONFIG_MMC_MSM_SDC3_SUPPORT
 
 #ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 static struct mmc_platform_data msm7x2x_sdc4_data = {
@@ -3327,7 +2526,7 @@ static struct mmc_platform_data msm7x2x_sdc4_data = {
 	.msmsdcc_fmax	= 49152000,
 	.nonremovable	= 0,
 };
-#endif
+#endif //CONFIG_MMC_MSM_SDC4_SUPPORT
 
 static void __init msm7x2x_init_mmc(void)
 {
@@ -3345,28 +2544,28 @@ static void __init msm7x2x_init_mmc(void)
 		msm7x2x_sdc1_data.nonremovable = 0;
 	msm_add_sdcc(1, &msm7x2x_sdc1_data);
 
-#endif
-//if (machine_is_msm7x25_surf() || machine_is_msm7x27_surf() ||
-//machine_is_msm7x27_ffa()) {
+#endif //CONFIG_MMC_MSM_SDC1_SUPPORT
+//if (machine_is_msm7x25_surf() || machine_is_msm7x27_surf() || machine_is_msm7x27_ffa()) {
 #ifdef CONFIG_MMC_MSM_SDC2_SUPPORT
 		if (machine_is_msm7x27_ffa())
 			msm7x2x_sdc2_data.nonremovable = 1;
 		msm_sdcc_setup_gpio(2, 1);
 		msm_add_sdcc(2, &msm7x2x_sdc2_data);
-#endif
+#endif //CONFIG_MMC_MSM_SDC2_SUPPORT
 //}
-	if (machine_is_msm7x25_surf() || machine_is_msm7x27_surf()) {
-#ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
+	if (machine_is_msm7x25_surf() || machine_is_msm7x27_surf()) 
+		{
+		#ifdef CONFIG_MMC_MSM_SDC3_SUPPORT
 		msm_add_sdcc(3, &msm7x2x_sdc3_data);
-#endif
-#ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
+		#endif
+		#ifdef CONFIG_MMC_MSM_SDC4_SUPPORT
 		msm_add_sdcc(4, &msm7x2x_sdc4_data);
-#endif
-	}
+		#endif
+		}
 }
-#else
+#else //(defined(CONFIG_MMC_MSM_SDC1_SUPPORT) || ...
 #define msm7x2x_init_mmc() do {} while (0)
-#endif
+#endif //(defined(CONFIG_MMC_MSM_SDC1_SUPPORT) || ...
 
 
 static struct msm_pm_platform_data msm7x25_pm_data[MSM_PM_SLEEP_MODE_NR] = {
@@ -3510,7 +2709,7 @@ static int init_usb3v3(void)
 }	
 //USB-HML-001 end
 
-#endif 
+#endif //CONFIG_ZTE_PLATFORM
 
 static void usb_mpp_init(void)
 {
@@ -3556,27 +2755,6 @@ static struct file_operations debug_global_file_ops = {
 	.read = debug_global_read,
 };
 
-//begin ZTE_CAM_GUOYANLING20110422 for S5K5CAGX-3.0Mp-AF-FPC
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX) 
-static void set_camera_reset_low(void)
-{
-    int rc = 0;
-
-    rc = gpio_request(2, NULL);
-    if (0 == rc)
-    {
-        /* ignore "rc" */
-        rc = gpio_direction_output(2, 0);
-
-        mdelay(10);
-    }
-
-    gpio_free(2);
-    mdelay(10);
-}
-#endif
-
-//end ZTE_CAM_GUOYANLING20110422 for S5K5CAGX-3.0Mp-AF-FPC
 
 //ZTE_WLY_CRDB00603771,START
 #if defined (CONFIG_MACH_JOE)
@@ -3662,12 +2840,6 @@ static void __init msm7x2x_init(void)
 	zte_ftm_set_value(g_zte_ftm_flag_fixup);
 #endif
 
-   ////ZTE_CAM_LJ_20110527		
-#if defined(CONFIG_S5K5CAGX_MCNEX_QTECH)|| defined(CONFIG_S5K5CAGX)
-	set_camera_reset_low();
-#endif
-
-
 	if (socinfo_init() < 0)
 		BUG();
 #ifdef CONFIG_ARCH_MSM7X25
@@ -3744,7 +2916,7 @@ static void __init msm7x2x_init(void)
 //		[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency;
 //	msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
 #endif
-#endif
+#endif //CONFIG_USB_MSM_OTG_72K
 /*ZTE_VIB_SLF_001  2010-03-02,BEGIN*/ 
 	msm_init_pmic_vibrator(); 
 /*ZTE_VIB_SLF_001  2010-03-02 END*/ 
