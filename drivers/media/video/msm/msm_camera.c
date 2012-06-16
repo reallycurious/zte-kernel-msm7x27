@@ -2411,8 +2411,8 @@ static long msm_ioctl_config(struct file *filep, unsigned int cmd,
 			ERR_COPY_FROM_USER();
 			rc = -EFAULT;
 		}
-//		else
-//			rc = msm_flash_ctrl(pmsm->sync->sdata, &flash_info);
+		else
+			rc = msm_flash_ctrl(pmsm->sync->sdata, &flash_info);
 
 		break;
 	}
