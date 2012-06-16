@@ -89,9 +89,7 @@ struct msm_camera_legacy_device_platform_data {
 #define MSM_CAMERA_FLASH_SRC_PMIC (0x00000001<<0)
 #define MSM_CAMERA_FLASH_SRC_PWM  (0x00000001<<1)
 #define MSM_CAMERA_FLASH_SRC_CURRENT_DRIVER	(0x00000001<<2)
-#define MSM_CAMERA_FLASH_SRC_GPIO_DRIVER	(0x00000001<<3)
 
-#if defined CONFIG_LEDS_PMIC8058
 struct msm_camera_sensor_flash_pmic {
 	uint8_t num_of_src;
 	uint32_t low_current;
@@ -100,12 +98,6 @@ struct msm_camera_sensor_flash_pmic {
 	enum pmic8058_leds led_src_2;
 	int (*pmic_set_current)(enum pmic8058_leds id, unsigned mA);
 };
-#else //defined CONFIG_LEDS_PMIC8058
-struct msm_camera_sensor_flash_pmic {
-	uint32_t low_current;
-	uint32_t high_current;
-};
-#endif //defined CONFIG_LEDS_PMIC8058
 
 struct msm_camera_sensor_flash_pwm {
 	uint32_t freq;

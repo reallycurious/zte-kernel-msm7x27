@@ -1936,6 +1936,7 @@ static int __msm_get_pic(struct msm_sync *sync, struct msm_ctrl_cmd *ctrl)
 
 	tm = (int)ctrl->timeout_ms;
 
+	CDBG("%s entry: timeout val=%d",__func__, tm);
 	spin_lock_irqsave(&sync->abort_pict_lock, flags);
 	sync->get_pic_abort = 0;
 	spin_unlock_irqrestore(&sync->abort_pict_lock, flags);
@@ -2380,7 +2381,7 @@ static long msm_ioctl_config(struct file *filep, unsigned int cmd,
 			rc = -EFAULT;
 		} else {
 			CDBG("msm_strobe_flash_init enter");
-			//rc = msm_strobe_flash_init(pmsm->sync, flash_type); ZTE_CAM_WT_20110221
+			rc = msm_strobe_flash_init(pmsm->sync, flash_type); ZTE_CAM_WT_20110221
 		}
 		break;
 	}
